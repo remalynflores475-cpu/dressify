@@ -19,6 +19,13 @@ export default function Shop() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOrder, setSortOrder] = useState("default");
 
+  // Advanced filter states
+const [selectedBrand, setSelectedBrand] = useState("all");
+const [minPrice, setMinPrice] = useState("");
+const [maxPrice, setMaxPrice] = useState("");
+const [minRating, setMinRating] = useState("all");
+const [inStockOnly, setInStockOnly] = useState(false);
+
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
@@ -52,30 +59,90 @@ export default function Shop() {
     ].sort();
   }, [products]);
 
+  // Get available brands
+const brands = useMemo(() => {
+  return [
+    ...new Set(
+      products
+        .map((product) => product.brand)
+        .filter(Boolean)
+    ),
+  ].sort();
+}, [products]);
+
   // Search, filter, and sort products
-  const filteredProducts = useMemo(() => {
-    let result = [...products];
+ 
+// Search, filter, and sort products
+const filteredProducts = useMemo(() => {
+  let result = [...products];
 
-    if (searchTerm.trim()) {
-      result = result.filter((product) =>
-        product.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+  // Search
+  if (searchTerm.trim()) {
+    result = result.filter((product) =>
+      product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
 
-    if (selectedCategory !== "all") {
-      result = result.filter(
-        (product) => product.category === selectedCategory
-      );
-    }
+  // Category filter
+  if (selectedCategory !== "all") {
+    result = result.filter(
+      (product) => product.category === selectedCategory
+    );
+  }
 
-    if (sortOrder === "low-high") {
-      result.sort((a, b) => a.price - b.price);
-    } else if (sortOrder === "high-low") {
-      result.sort((a, b) => b.price - a.price);
-    }
+  // Brand filter
+  if (selectedBrand !== "all") {
+    result = result.filter(
+      (product) => product.brand === selectedBrand
+    );
+  }
 
-    return result;
-  }, [products, searchTerm, selectedCategory, sortOrder]);
+  // Minimum price filter
+  if (minPrice !== "") {
+    result = result.filter(
+      (product) => product.price >= Number(minPrice)
+    );
+  }
+
+  // Maximum price filter
+  if (maxPrice !== "") {
+    result = result.filter(
+      (product) => product.price <= Number(maxPrice)
+    );
+  }
+
+  // Minimum rating filter
+  if (minRating !== "all") {
+    result = result.filter(
+      (product) => product.rating >= Number(minRating)
+    );
+  }
+
+  // In-stock filter
+  if (inStockOnly) {
+    result = result.filter((product) => product.stock > 0);
+  }
+
+  // Sorting
+  if (sortOrder === "low-high") {
+    result.sort((a, b) => a.price - b.price);
+  } else if (sortOrder === "high-low") {
+    result.sort((a, b) => b.price - a.price);
+  }
+
+  return result;
+}, [
+  products,
+  searchTerm,
+  selectedCategory,
+  selectedBrand,
+  minPrice,
+  maxPrice,
+  minRating,
+  inStockOnly,
+  sortOrder,
+]);
+
 
   // Calculate pagination
   const totalPages = Math.ceil(
@@ -167,6 +234,109 @@ onChange={(e) => {
             <option value="high-low">Price: High to Low</option>
           </select>
         </div>
+         
+
+<div className="advanced-filters">
+  <div className="advanced-filters-heading">
+    <h3>Advanced Filters</h3>
+
+    <button
+      type="button"
+      onClick={() => {
+        setSelectedBrand("all");
+        setMinPrice("");
+        setMaxPrice("");
+        setMinRating("all");
+        setInStockOnly(false);
+        setCurrentPage(1);
+      }}
+    >
+      Clear All Filters
+    </button>
+  </div>
+
+  <div className="advanced-filters-grid">
+    <div className="advanced-filter-group">
+      <label htmlFor="brand-filter">Brand</label>
+      <select
+        id="brand-filter"
+        value={selectedBrand}
+        onChange={(e) => {
+          setSelectedBrand(e.target.value);
+          setCurrentPage(1);
+        }}
+      >
+        <option value="all">All Brands</option>
+        {brands.map((brand) => (
+          <option value={brand} key={brand}>
+            {brand}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <div className="advanced-filter-group">
+      <label htmlFor="min-price">Minimum Price ($)</label>
+      <input
+        id="min-price"
+        type="number"
+        min="0"
+        placeholder="Min price"
+        value={minPrice}
+        onChange={(e) => {
+          setMinPrice(e.target.value);
+          setCurrentPage(1);
+        }}
+      />
+    </div>
+
+    <div className="advanced-filter-group">
+      <label htmlFor="max-price">Maximum Price ($)</label>
+      <input
+        id="max-price"
+        type="number"
+        min="0"
+        placeholder="Max price"
+        value={maxPrice}
+        onChange={(e) => {
+          setMaxPrice(e.target.value);
+          setCurrentPage(1);
+        }}
+      />
+    </div>
+
+    <div className="advanced-filter-group">
+      <label htmlFor="rating-filter">Minimum Rating</label>
+      <select
+        id="rating-filter"
+        value={minRating}
+        onChange={(e) => {
+          setMinRating(e.target.value);
+          setCurrentPage(1);
+        }}
+      >
+        <option value="all">All Ratings</option>
+        <option value="4">4 Stars and Above</option>
+        <option value="3">3 Stars and Above</option>
+        <option value="2">2 Stars and Above</option>
+      </select>
+    </div>
+
+    <div className="advanced-filter-group stock-filter">
+      <label>
+        <input
+          type="checkbox"
+          checked={inStockOnly}
+          onChange={(e) => {
+            setInStockOnly(e.target.checked);
+            setCurrentPage(1);
+          }}
+        />
+        In-stock products only
+      </label>
+    </div>
+  </div>
+</div>
 
         <div className="products-toolbar">
           <p>{filteredProducts.length} Products Found</p>
