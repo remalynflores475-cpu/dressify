@@ -6,6 +6,7 @@ import {
   toggleFavorite,
 } from "../services/favoriteService";
 import { Heart, Search, SlidersHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Shop() {
   const [products, setProducts] = useState([]);
@@ -153,11 +154,14 @@ export default function Shop() {
               return (
                 <article className="product-card" key={product.id}>
                   <div className="product-image-wrapper">
-                    <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      loading="lazy"
-                    />
+                   <Link to={`/product/${product.id}`} className="product-image-link">
+                   <img
+                       src={product.thumbnail}
+                       alt={product.title}
+                       loading="lazy"
+                      />
+                     </Link>
+                    
 
                     <button
                       className="product-favorite-button"
@@ -179,8 +183,12 @@ export default function Shop() {
                   </div>
 
                   <div className="product-info">
-                    <h3>{product.title}</h3>
-                    <p>
+                  <h3>
+                  <Link to={`/product/${product.id}`} className="product-title-link">
+                      {product.title}
+                       </Link>
+                         </h3>              
+                     <p>
                       {product.category
                         .replace("womens-", "")
                         .replace("-", " ")}

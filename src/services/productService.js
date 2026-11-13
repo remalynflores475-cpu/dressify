@@ -17,3 +17,13 @@ export async function getProducts() {
       product.category === "tops"
   );
 }
+
+export async function getProductById(id) {
+  const response = await fetch(`https://dummyjson.com/products/${id}`);
+
+  if (!response.ok) {
+    throw new Error("Unable to load product details. Please try again.");
+  }
+
+  return await response.json();
+}

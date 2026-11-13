@@ -43,11 +43,13 @@ export default function Favorites() {
             {favorites.map((product) => (
               <article className="product-card" key={product.id}>
                 <div className="product-image-wrapper">
-                  <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    loading="lazy"
-                  />
+                  <Link to={`/product/${product.id}`} className="product-image-link">
+  <img
+    src={product.thumbnail}
+    alt={product.title}
+    loading="lazy"
+  />
+</Link>
 
                   <button
                     className="product-favorite-button"
@@ -60,8 +62,11 @@ export default function Favorites() {
                 </div>
 
                 <div className="product-info">
-                  <h3>{product.title}</h3>
-                  <p>
+<h3>
+  <Link to={`/product/${product.id}`} className="product-title-link">
+    {product.title}
+  </Link>
+</h3>                  <p>
                     {product.category
                       .replace("womens-", "")
                       .replace("-", " ")}
