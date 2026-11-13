@@ -1,12 +1,16 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getProducts } from "../services/productService";
-import { Heart } from "lucide-react";
+import { Heart, Search, SlidersHorizontal } from "lucide-react";
 
 export default function Shop() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortOrder, setSortOrder] = useState("default");
 
   useEffect(() => {
     async function loadProducts() {
@@ -25,6 +29,34 @@ export default function Shop() {
 
     loadProducts();
   }, []);
+
+  const categories = useMemo(() => {
+    return [...new Set(products.map((product) => product.category))].sort();
+  }, [products]);
+
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+
+    if (searchTerm.trim()) {
+      result = result.filter((product) =>
+        product.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (selectedCategory !== "all") {
+      result = result.filter(
+        (product) => product.category === selectedCategory
+      );
+    }
+
+    if (sortOrder === "low-high") {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortOrder === "high-low") {
+      result.sort((a, b) => b.price - a.price);
+    }
+
+    return result;
+  }, [products, searchTerm, selectedCategory, sortOrder]);
 
   if (loading) {
     return (
@@ -54,36 +86,81 @@ export default function Shop() {
       </section>
 
       <section className="products-section">
+        <div className="shop-filters">
+          <div className="search-box">
+            <Search size={18} />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <div className="filter-control">
+            <SlidersHorizontal size={17} />
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <option value="all">All Categories</option>
+              {categories.map((category) => (
+                <option value={category} key={category}>
+                  {category.replace("womens-", "").replace("-", " ")}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <select
+            className="sort-select"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="default">Default Sorting</option>
+            <option value="low-high">Price: Low to High</option>
+            <option value="high-low">Price: High to Low</option>
+          </select>
+        </div>
+
         <div className="products-toolbar">
-          <p>{products.length} Products</p>
+          <p>{filteredProducts.length} Products Found</p>
         </div>
 
-        <div className="products-grid">
-          {products.map((product) => (
-            <article className="product-card" key={product.id}>
-              <div className="product-image-wrapper">
-                <img
-                  src={product.thumbnail}
-                  alt={product.title}
-                  loading="lazy"
-                />
+        {filteredProducts.length === 0 ? (
+          <div className="shop-message">
+            <h3>No products found</h3>
+            <p>Try another search term or category.</p>
+          </div>
+        ) : (
+          <div className="products-grid">
+            {filteredProducts.map((product) => (
+              <article className="product-card" key={product.id}>
+                <div className="product-image-wrapper">
+                  <img
+                    src={product.thumbnail}
+                    alt={product.title}
+                    loading="lazy"
+                  />
 
-                <button
-                  className="product-favorite-button"
-                  aria-label={`Add ${product.title} to favorites`}
-                >
-                  <Heart size={19} />
-                </button>
-              </div>
+                  <button
+                    className="product-favorite-button"
+                    aria-label={`Add ${product.title} to favorites`}
+                    type="button"
+                  >
+                    <Heart size={19} />
+                  </button>
+                </div>
 
-              <div className="product-info">
-                <h3>{product.title}</h3>
-                <p>{product.category}</p>
-                <strong>${product.price.toFixed(2)}</strong>
-              </div>
-            </article>
-          ))}
-        </div>
+                <div className="product-info">
+                  <h3>{product.title}</h3>
+                  <p>{product.category.replace("womens-", "").replace("-", " ")}</p>
+                  <strong>${product.price.toFixed(2)}</strong>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );

@@ -1,7 +1,8 @@
-const API_URL = "https://dummyjson.com/products/category/womens-dresses";
+
+const API_URL = "https://dummyjson.com/products?limit=0";
 
 export async function getProducts() {
-  const response = await fetch(`${API_URL}?limit=0`);
+  const response = await fetch(API_URL);
 
   if (!response.ok) {
     throw new Error("Failed to fetch products. Please try again.");
@@ -9,5 +10,10 @@ export async function getProducts() {
 
   const data = await response.json();
 
-  return data.products;
+  // Keep women's fashion products and general tops.
+  return data.products.filter(
+    (product) =>
+      product.category.startsWith("womens-") ||
+      product.category === "tops"
+  );
 }
