@@ -917,3 +917,53 @@
     width: 100%;
   }
 }
+
+/* ========================================
+   PRODUCT PAGINATION
+======================================== */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 45px 0 20px;
+}
+
+.pagination-button {
+  min-width: 42px;
+  height: 42px;
+  padding: 0 13px;
+  border: 1px solid #ded6cb;
+  background: transparent;
+  color: #51483e;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled),
+.pagination-button.active {
+  background: #a17b54;
+  border-color: #a17b54;
+  color: #fff;
+}
+
+.pagination-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    gap: 6px;
+  }
+
+  .pagination-button {
+    min-width: 36px;
+    height: 38px;
+    padding: 0 9px;
+  }
+}
