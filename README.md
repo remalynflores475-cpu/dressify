@@ -121,12 +121,21 @@ Favorite products are stored in the browser's Local Storage, allowing users to r
 
 ## Team Contributions
 
-Update the names and responsibilities below to reflect the actual work of the project members.
+## Project Developer
 
-| Member | Responsibilities |
-|---|---|
-| [Member 1 Name] | [Actual assigned responsibilities] |
-| [Member 2 Name] | [Actual assigned responsibilities] |
+**Developer:** Remalyn Flores
+
+### Responsibilities
+
+- Designed and developed the Dressify user interface.
+- Implemented React components and application pages.
+- Integrated the DummyJSON Products API.
+- Implemented product search, category filtering, and price sorting.
+- Developed product pagination and product details.
+- Implemented favorites management using Local Storage.
+- Configured React Router navigation.
+- Performed application testing and debugging.
+- Managed Git version control and GitHub repository documentation.
 
 ## Project Status
 
