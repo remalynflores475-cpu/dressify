@@ -1,10 +1,15 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { getProducts } from "../services/productService";
+import {
+  getFavorites,
+  toggleFavorite,
+} from "../services/favoriteService";
 import { Heart, Search, SlidersHorizontal } from "lucide-react";
 
 export default function Shop() {
   const [products, setProducts] = useState([]);
+  const [favorites, setFavorites] = useState(() => getFavorites());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -57,6 +62,11 @@ export default function Shop() {
 
     return result;
   }, [products, searchTerm, selectedCategory, sortOrder]);
+
+  function handleFavorite(product) {
+    const updatedFavorites = toggleFavorite(product);
+    setFavorites(updatedFavorites);
+  }
 
   if (loading) {
     return (
@@ -125,6 +135,7 @@ export default function Shop() {
 
         <div className="products-toolbar">
           <p>{filteredProducts.length} Products Found</p>
+          <p>{favorites.length} Favorites Saved</p>
         </div>
 
         {filteredProducts.length === 0 ? (
@@ -134,31 +145,51 @@ export default function Shop() {
           </div>
         ) : (
           <div className="products-grid">
-            {filteredProducts.map((product) => (
-              <article className="product-card" key={product.id}>
-                <div className="product-image-wrapper">
-                  <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    loading="lazy"
-                  />
+            {filteredProducts.map((product) => {
+              const isFavorite = favorites.some(
+                (item) => item.id === product.id
+              );
 
-                  <button
-                    className="product-favorite-button"
-                    aria-label={`Add ${product.title} to favorites`}
-                    type="button"
-                  >
-                    <Heart size={19} />
-                  </button>
-                </div>
+              return (
+                <article className="product-card" key={product.id}>
+                  <div className="product-image-wrapper">
+                    <img
+                      src={product.thumbnail}
+                      alt={product.title}
+                      loading="lazy"
+                    />
 
-                <div className="product-info">
-                  <h3>{product.title}</h3>
-                  <p>{product.category.replace("womens-", "").replace("-", " ")}</p>
-                  <strong>${product.price.toFixed(2)}</strong>
-                </div>
-              </article>
-            ))}
+                    <button
+                      className="product-favorite-button"
+                      aria-label={
+                        isFavorite
+                          ? `Remove ${product.title} from favorites`
+                          : `Add ${product.title} to favorites`
+                      }
+                      aria-pressed={isFavorite}
+                      type="button"
+                      onClick={() => handleFavorite(product)}
+                    >
+                      <Heart
+                        size={19}
+                        fill={isFavorite ? "#a17b54" : "none"}
+                        color={isFavorite ? "#a17b54" : "currentColor"}
+                      />
+                    </button>
+                  </div>
+
+                  <div className="product-info">
+                    <h3>{product.title}</h3>
+                    <p>
+                      {product.category
+                        .replace("womens-", "")
+                        .replace("-", " ")}
+                    </p>
+                    <strong>${product.price.toFixed(2)}</strong>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>

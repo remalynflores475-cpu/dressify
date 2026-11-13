@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import "./App.css";
 import Shop from "./pages/Shop";
+import Favorites from "./pages/Favorites";
 
 function Placeholder({ title }) {
   return (
@@ -24,7 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
-        <Route path="/favorites" element={<Placeholder title="Your Favorites" />} />
+        <Route path="/favorites" element={<Favorites />} />
         <Route path="/product/:id" element={<Placeholder title="Product Details" />} />
         <Route path="*" element={<Placeholder title="Page Not Found" />} />
       </Routes>

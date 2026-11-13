@@ -643,3 +643,66 @@
     grid-template-columns: 1fr;
   }
 }
+
+.favorites-page {
+  padding: 70px 7% 100px;
+  min-height: 65vh;
+}
+
+.favorites-heading {
+  text-align: center;
+  margin-bottom: 55px;
+}
+
+.favorites-heading .eyebrow {
+  color: #a17b54;
+}
+
+.favorites-heading h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(38px, 5vw, 55px);
+  font-weight: 400;
+  margin: 18px 0;
+}
+
+.favorites-heading p {
+  color: #777168;
+  font-size: 13px;
+}
+
+.favorites-toolbar {
+  border-bottom: 1px solid #e5e0d8;
+  padding-bottom: 18px;
+  margin-bottom: 25px;
+  font-size: 12px;
+  color: #777168;
+}
+
+.empty-favorites {
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 17px;
+  color: #777168;
+}
+
+.empty-favorites h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 29px;
+  color: #292721;
+}
+
+.empty-favorites p {
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.empty-favorites .primary-button {
+  margin-top: 10px;
+  background: #39362f;
+  color: white;
+}
