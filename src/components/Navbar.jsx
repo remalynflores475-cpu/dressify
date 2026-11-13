@@ -2,11 +2,9 @@
 import { Link, NavLink } from "react-router-dom";
 import { Search, Heart, ShoppingBag, Menu } from "lucide-react";
 import { useState } from "react";
-import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { cartCount } = useCart();
 
   return (
     <>
@@ -23,11 +21,9 @@ export default function Navbar() {
           <NavLink to="/" onClick={() => setMenuOpen(false)}>
             Home
           </NavLink>
-
           <NavLink to="/shop" onClick={() => setMenuOpen(false)}>
             Shop
           </NavLink>
-
           <NavLink to="/favorites" onClick={() => setMenuOpen(false)}>
             Favorites
           </NavLink>
@@ -38,25 +34,13 @@ export default function Navbar() {
             <Search size={20} />
           </button>
 
-          <Link
-            to="/favorites"
-            aria-label="Favorites"
-            className="icon-button"
-          >
+          <Link to="/favorites" aria-label="Favorites" className="icon-button">
             <Heart size={20} />
           </Link>
 
-          <Link
-            to="/cart"
-            aria-label={`Shopping cart, ${cartCount} items`}
-            className="icon-button cart-nav-link"
-          >
+          <button aria-label="Shopping bag" className="icon-button">
             <ShoppingBag size={20} />
-
-            {cartCount > 0 && (
-              <span className="cart-count">{cartCount}</span>
-            )}
-          </Link>
+          </button>
 
           <button
             aria-label="Toggle navigation"

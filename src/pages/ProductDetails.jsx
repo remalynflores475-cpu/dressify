@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Heart, ShoppingBag, Star } from "lucide-react";
 import { getProductById } from "../services/productService";
-import { useCart } from "../context/CartContext";
 import {
   getFavorites,
   toggleFavorite,
@@ -17,7 +16,6 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
-  const { addToCart } = useCart();
 
   useEffect(() => {
     async function loadProduct() {
@@ -112,31 +110,23 @@ export default function ProductDetails() {
             </p>
 
             <div className="product-details-actions">
-  <button
-    type="button"
-    className="primary-button"
-    onClick={handleFavorite}
-  >
-    <Heart
-      size={18}
-      fill={isFavorite ? "currentColor" : "none"}
-    />
-    {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-  </button>
+              <button
+                type="button"
+                className="primary-button"
+                onClick={handleFavorite}
+              >
+                <Heart
+                  size={18}
+                  fill={isFavorite ? "currentColor" : "none"}
+                />
+                {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+              </button>
 
-  <button
-    type="button"
-    className="secondary-button"
-    onClick={() => addToCart(product)}
-  >
-    <ShoppingBag size={18} />
-    Add to Cart
-  </button>
-
-  <Link to="/shop" className="secondary-button">
-    Continue Shopping
-  </Link>
-</div>
+              <Link to="/shop" className="secondary-button">
+                <ShoppingBag size={18} />
+                Continue Shopping
+              </Link>
+            </div>
 
             <div className="product-extra-info">
               <p><strong>Brand:</strong> {product.brand || "Dressify"}</p>
